@@ -17,7 +17,6 @@ def get_video_stats(api_key, channel_id):
 
         uploads_playlist_id = response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
 
-        # Retrieve all videos from the uploads playlist
         video_ids = []
         next_page_token = None
 
@@ -30,7 +29,6 @@ def get_video_stats(api_key, channel_id):
             )
             playlist_response = playlist_request.execute()
 
-            # Collect video IDs
             for item in playlist_response['items']:
                 video_ids.append(item['contentDetails']['videoId'])
 
@@ -38,7 +36,6 @@ def get_video_stats(api_key, channel_id):
             if not next_page_token:
                 break
 
-        # Collect video stats
         video_data = []
 
         for i in range(0, len(video_ids), 50):
@@ -59,7 +56,6 @@ def get_video_stats(api_key, channel_id):
                 }
                 video_data.append(video_stats)
 
-        # Convert the list of dicts to a pandas DataFrame
         video_df = pd.DataFrame(video_data)
 
         return video_df
@@ -71,15 +67,14 @@ def get_video_stats(api_key, channel_id):
         print(f"An error occurred: {e}")
         return None
 
-# Insert your YouTube Data API key
+# Insert YouTube Data API key
 api_key = ''
 
 # Insert YouTube channel ID
-channel_id = 'UCwrVwiJllwhJUKXKmjLcckQ'
+channel_id = ''
 
 df = get_video_stats(api_key, channel_id)
 
-# Save the DataFrame to a CSV file
 if df is not None:
     df.to_csv('youtube_video_stats.csv', index=False)
     print(df)
